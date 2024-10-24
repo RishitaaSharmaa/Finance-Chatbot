@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Budget Management Chatbot</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Budget Management Chatbot</h1>
+        <div class="chatbox">
+            <div id="messages" class="messages"></div>
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById("user-input");
+            const message = userInput.value;
+            userInput.value = '';
+
+            const messages = document.getElementById("messages");
+            messages.innerHTML += `<div class="user-message">${message}</div>`;
+
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message })
+            });
+            const data = await response.json();
+            messages.innerHTML += `<div class="bot-message">${data.response}</div>`;
+        }
+    </script>
+</body>
+</html>
